@@ -1,0 +1,16 @@
+# Node modules (フロントエンドの依存関係)
+/web/node_modules
+/web/build
+/web/.env
+
+# Go binaries and cache (バックエンド)
+/api/bin/
+/api/*.exe
+/api/.env
+/api/.idea/
+/api/.vscode/
+
+# IDE and OS files
+.DS_Store
+.env
+/web/vite.config.ts.timestamp*

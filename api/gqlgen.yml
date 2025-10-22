@@ -1,0 +1,158 @@
+# スキーマファイルはどこにありますか？ src/**/*.graphqls のようなglobがサポートされています
+schema:
+  - graph/*.graphqls
+
+# 生成されたサーバーコードはどこに置くべきですか？
+exec:
+  package: graph
+  layout: single-file # 他の選択肢は "follow-schema"、つまり複数ファイルです。
+
+  # single-file レイアウトの場合のみ：
+  filename: graph/generated.go
+
+  # follow-schema レイアウトの場合のみ：
+  # dir: graph
+  # filename_template: "{name}.generated.go"
+
+  # オプション：子のリゾルバごとに使用する並行処理の最大ゴルーチン数（デフォルト：無制限）
+  # worker_limit: 1000
+
+# フェデレーションを有効にするにはコメントを解除してください
+# federation:
+#   filename: graph/federation.go
+#   package: graph
+#   version: 2
+#   options:
+#     computed_requires: true
+
+# 生成されたモデルはどこに置くべきですか？
+model:
+  filename: graph/model/models_gen.go
+  package: model
+
+  # オプション：モデルの生成に使用する新しいgotplテンプレートへのパスを渡します
+  # model_template: [your/path/model.gotpl]
+
+# リゾルバの実装はどこに置くべきですか？
+resolver:
+  package: graph
+  layout: follow-schema # 他の選択肢は "single-file" です。
+
+  # single-file レイアウトの場合のみ：
+  # filename: graph/resolver.go
+
+  # follow-schema レイアウトの場合のみ：
+  dir: graph
+  filename_template: "{name}.resolvers.go"
+
+  # オプション：リゾルバの上にテンプレートコメントを生成しないようにするにはオンにします
+  # omit_template_comment: false
+  # オプション：リゾルバの生成に使用する新しいgotplテンプレートへのパスを渡します
+  # resolver_template: [your/path/resolver.gotpl]
+  # オプション：生成時に既存のリゾルバを書き換えないようにするにはオンにします
+  # preserve_resolver: false
+
+# オプション：モデルで ` + '''`''' + `gqlgen:"fieldName"` + '''`''' + ` タグを使用するにはオンにします
+# struct_tag: json
+
+# オプション：[]*Thing の代わりに []Thing を使用するにはオンにします
+# omit_slice_element_pointers: false
+
+# オプション：インターフェースとユニオンから Is<Name>() メソッドを省略するにはオンにします
+# omit_interface_checks: true
+
+# オプション：ComplexityRoot 構造体の内容と Complexity 関数の生成をスキップするにはオンにします
+# omit_complexity: false
+
+# オプション：生成されたファイルにファイル通知コメントを生成しないようにするにはオンにします
+# omit_gqlgen_file_notice: false
+
+# オプション：生成されたファイル通知から gqlgen のバージョンを除外するにはオンにします。`omit_gqlgen_file_notice` が true の場合は効果がありません。
+# omit_gqlgen_version_in_file_notice: false
+
+# オプション：生成されたモデルファイルから Query や Mutation などのルートモデルを除外するにはオンにします。
+# omit_root_models: false
+
+# オプション：生成されたモデルファイルからリゾルバフィールドを除外するにはオンにします。
+# omit_resolver_fields: false
+
+# オプション：構造体型の構造体フィールドがポインタを使用しないようにするにはオフにします
+# 例： type Thing struct { FieldA OtherThing } の代わりに { FieldA *OtherThing }
+# struct_fields_always_pointers: true
+
+# オプション：リゾルバが構造体の代わりに値を返すようにするにはオフにします
+# resolvers_always_return_pointers: true
+
+# オプション：unmarshalInput で値の代わりにポインタを返すにはオンにします
+# return_pointers_in_unmarshalinput: false
+
+# オプション：null 許容の入力フィールドを Omittable でラップします
+# nullable_input_omittable: true
+
+# オプション：最終的な検証パスを実行しないことで生成時間を短縮するように設定します。
+# skip_validation: true
+
+# オプション：サーバーコードの生成時に `go mod tidy` の実行をスキップするように設定します
+# skip_mod_tidy: true
+
+# オプション：これを true に設定すると、null 値でフィールドを装飾する
+# 引数ディレクティブが引き続き呼び出されます。
+#
+# これにより、引数ディレクティブは引数の値を変更するだけでなく、
+# null であっても設定できるようになります。
+call_argument_directives_with_null: true
+
+# これにより、gql サーバーは実行コンテキストのレシーバーメソッドを生成する代わりに、
+# 実行コンテキストに関数構文を使用できるようになります。
+# use_function_syntax_for_execution_context: true
+
+# オプション：パッケージの読み込みに使用されるビルドタグを設定します
+# go_build_tags:
+#  - private
+#  - enterprise
+
+# オプション：Go の名前に使用される頭字語を変更するように設定します
+# go_initialisms:
+#   replace_defaults: false # true の場合、デフォルトの頭字語は追加される代わりに新しいものに置き換えられます
+#   initialisms: # Go の名前に使用される頭字語のリスト
+#     - 'CC'
+#     - 'BCC'
+
+# gqlgen は、これらの Go パッケージ内のスキーマ内の型名を検索します
+# 一致する場合はそれらを使用し、それ以外の場合は生成します。
+autobind:
+#  - "github.com/makoto-teieki/stock-trader-api/graph/model"
+
+# このセクションでは、GraphQL と Go の型システム間の型マッピングを宣言します
+#
+# 各型の最初の行は、リゾルバの引数と
+# modelgen のデフォルトとして使用され、残りはフィールドへのバインド時に許可されます。
+# 好みに合わせて設定してください
+models:
+  ID:
+    model:
+      - github.com/99designs/gqlgen/graphql.ID
+      - github.com/99designs/gqlgen/graphql.Int
+      - github.com/99designs/gqlgen/graphql.Int64
+      - github.com/99designs/gqlgen/graphql.Int32
+  # gqlgen は、github.com/google/uuid のためのデフォルトの GraphQL UUID 便利なラッパーを提供します
+  # しかし、独自の GraphQL UUID 実装を提供するためにこれをオーバーライドできます
+  UUID:
+    model:
+      - github.com/99designs/gqlgen/graphql.UUID
+
+  # GraphQL 仕様では、Int 型は符号付き 32 ビット整数であると明記されています。
+  # Go の int または int64 を使用して表現すると、予期しない動作につながる可能性があり、
+  # Apollo Router などの一部の GraphQL ツールは、32 ビットを超える数値を通信する際に失敗します。
+  #
+  # 64 ビット整数を表すためにカスタムの組み込み Int64 スカラーを使用するか、
+  # 仕様を無視して Int を graphql.Int / graphql.Int64 にバインドするかを選択できます
+  # （gqlgen のデフォルトの動作）。これは、相互運用性を心配する必要がなく、
+  # 小さな数値しか期待しない単純なユースケースでは問題ありません。
+  Int:
+    model:
+      - github.com/99designs/gqlgen/graphql.Int32
+  Int64:
+    model:
+      - github.com/99designs/gqlgen/graphql.Int
+      - github.com/99designs/gqlgen/graphql.Int64

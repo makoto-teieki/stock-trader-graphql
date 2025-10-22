@@ -1,0 +1,7 @@
+# 株価リアルタイム更新の購読を定義
+subscription StockPriceUpdate($code: String!) {
+  stockPriceUpdate(code: $code) {
+    code
+    price
+  }
+}
